@@ -42,7 +42,7 @@ nlp.add_pipe("templater_component", name="templater", last=True)
 class Kevin(Chatbot):
     def __init__(self):
         #print(os.listdir())
-        self.generator = pipeline('text-generation', model='./chatbots/gpt2-untemplated-quests', tokenizer='gpt2',config="./chatbots/gpt2-untemplated-quests/config.json")
+        self.generator = pipeline('text-generation', model='bkwebb23/gpt2-untemplated-quests', tokenizer='gpt2')
         self.response = None
 
     def fix_templates(self, templated_quest):
