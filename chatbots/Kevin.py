@@ -3,6 +3,7 @@ from transformers import pipeline
 import os
 import spacy
 from spacy.language import Language
+from chatbots.fill_temp import fill_templates
 
 # Adam's Spacy pipeline
 @Language.component("templater_component")
@@ -35,10 +36,11 @@ nlp = spacy.load("en_core_web_lg")
 nlp.add_pipe("templater_component", name="templater", last=True)
 
 
+
 class Kevin(Chatbot):
     def __init__(self):
         #print(os.listdir())
-        self.generator = pipeline('text-generation', model='./chatbots/gpt2-untemplated-quests', tokenizer='gpt2',config="chatbots\gpt2-untemplated-quests\config.json", use_auth_token=True)
+        #! self.generator = pipeline('text-generation', model='./chatbots/gpt2-untemplated-quests', tokenizer='gpt2',config="chatbots\gpt2-untemplated-quests\config.json")
         self.response = None
 
     def send_message(self):
@@ -49,26 +51,31 @@ class Kevin(Chatbot):
 
         # Generate response and parse everything up to the last period to prevent incomplete sentence
         # TODO: Is there a better way to do this?
-        npc_quest = self.generate(plr_full_msg).rpartition('.')
-        npc_quest = npc_quest[0] + npc_quest[1]
+        #! npc_quest = self.generate(plr_full_msg).rpartition('.')
+        #! npc_quest = npc_quest[0] + npc_quest[1]
 
         # Use spacy pipeline to template quest
-        doc = nlp(npc_quest)
+        #! doc = nlp(npc_quest)
 
         # Convert to String
-        quest_template = doc_to_string(doc)
-        print("before processing: ", quest_template)
+        #! quest_template = doc_to_string(doc)
+        #! print("before processing: ", quest_template)
 
         # Add the 5->Plr message to the front of the string 
         # TODO: Eliminate the need for this
-        quest_template = "5->Plr: " + quest_template
+        hard_coded_temp = "Armageddon approaches. Only you can stop it, with the help of <PERSON1>. You must meet them at <LOC1>." #!
+        quest_template = "5->Plr: " + hard_coded_temp #!
+        #! quest_template = "5->Plr: " + quest_template
 
         # Replace newlines with spaces to avoid awkward formatting from GPT2
         quest_template = quest_template.replace('\n', ' ')
 
         print("\nTemplated Quest: ", quest_template)
+
+        filled_in_quest = fill_templates.fill_in(quest_template)
         
-        return {"text": quest_template}
+        return {"text": filled_in_quest}
+        # return {"text": quest_template}
 
     def recv_message(self, message):
         self.response = message
@@ -77,3 +84,4 @@ class Kevin(Chatbot):
     def generate(self, input):
         print("Generating message from pipeline...")
         return self.generator(input)[0]['generated_text']
+
