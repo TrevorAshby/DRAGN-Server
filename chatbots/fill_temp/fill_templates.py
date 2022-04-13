@@ -58,12 +58,16 @@ def construct_query(temp_types, mult_dict, depth=1):
                     cypher_query += w
 
         # return in the order we have in the dictionary temp_category, namely 0,1,...,len(temp_category)
-        cypher_query += "return x0.name, "
+        cypher_query += "return x0.name"
+        if len(temp_types) > 1: cypher_query += ", "
+        print("Template types: ", temp_types)
+        print("Length of temp types: ", len(temp_types))
         ret_list = [f"x{i}.name, " for i in range(1,len(temp_types)-1)] # minus one because we don't want trailing comma
         for q in ret_list:
             cypher_query += q
         j = len(temp_types)-1
-        cypher_query += f"x{j}.name"
+        if len(temp_types) > 1: cypher_query += f"x{j}.name"
+        print("Cypher query: ", cypher_query)
 
         res = actually_query(cypher_query) 
         if res != None:
@@ -125,13 +129,15 @@ def strip_template(template, translate_to_kg):
 
 
 def fill_in(template):
-    # make templates and knowledge graph compatible (dictionary hard-coded) {words_in_template: corres_word_in_template}
+    # make templates and knowledge graph compatible (dictionary hard-coded) {words_in_template: corres_word_in_knowledge_graph}
     # translate_to_kg = {"group": "occupation", "object": "obj"} # for my knowledge group and hard-coded templates
     translate_to_kg = {"ORG": "occupation", "PERSON": "person", "LOC": "location"} # for my knowledge group
     # translate_to_kg = {"group": "Group", "obj": "Object", "object": "Object", "location": "Location", "person": "Person"} # for class k.g.
 
     # set up string
     new_str, temp_words = strip_template(template, translate_to_kg)
+    print("Dictionary of templates: ", temp_words)
+    print("String to fill in: ", new_str)
     # format of temp_words : temp_words[(word, mult)] = num representing this word in new_str
 
     # check that all node types in temp_words are actual labels in the knowledge graph
@@ -143,11 +149,14 @@ def fill_in(template):
             raise Exception("Template type is not in knowledge graph.")
 
     # construct cypher query
+    if temp_words == dict(): # no template tokens in quest
+        return template
     q = query(temp_words)
 
     # make dict from output of knowledge graph
     assert (q != None)
     fill_in_dict = make_dict(temp_words, q)
+    print("Filled in dictionary for temp: ", fill_in_dict)
 
     # fill in template
     return new_str.translate(str.maketrans(fill_in_dict))
