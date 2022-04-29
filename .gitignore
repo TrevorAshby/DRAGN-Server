@@ -1,3 +1,2 @@
 venv/
-chatbots/__pycache__/
-chatbots/fill_temp/__pycache__/
+__pycache__/.
