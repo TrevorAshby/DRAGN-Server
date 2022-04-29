@@ -61,7 +61,14 @@ class Kevin(Chatbot):
 
         # Step 1: Extract player message
         # Extract the player's message from the json
-        plr_full_msg = self.response['text'].split(":")[1]
+        plr_full_msg = self.response['text'].split(":")
+
+        # Check for message from pygame or test client.
+        if len(plr_full_msg) == 1:
+            plr_full_msg = self.response['text']
+        else:
+            plr_full_msg = plr_full_msg[1]
+
 
         # Cheat and capitalize first letter of player message
         plr_full_msg = plr_full_msg.capitalize()
