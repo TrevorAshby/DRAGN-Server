@@ -2,14 +2,16 @@ import json
 import socket
 from datetime import datetime
 from chatbots.Echo import Echo
+from chatbots.Gary import Gary
 from chatbots.Trevor import Trevor
 from chatbots.Kevin import Kevin
 from urllib.parse import parse_qs
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 
-chatbots = ["ECHO", "TREVOR", "KEVIN"]
+chatbots = ["ECHO", "GARY", "TREVOR", "KEVIN"]
 echo = Echo()
+gary = Gary()
 trevor = Trevor()
 kevin = Kevin()
 
@@ -45,6 +47,10 @@ class GP(BaseHTTPRequestHandler):
             print("Echo sent a message @: ", str(datetime.now()))
             req_json = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
             self.send_json(echo, req_json)
+        elif self.path == "/chatbot/gary":
+            print("Gary sent a message @: ", str(datetime.now()))
+            req_json = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
+            self.send_json(gary, req_json)
         elif self.path == "/chatbot/trevor":
             print("Trevor sent a message @: ", str(datetime.now()))
             req_json = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
