@@ -3,13 +3,15 @@ import socket
 from datetime import datetime
 from chatbots.Echo import Echo
 from chatbots.Trevor import Trevor
+from chatbots.Kevin import Kevin
 from urllib.parse import parse_qs
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 
-chatbots = ["ECHO", "TREVOR"]
+chatbots = ["ECHO", "TREVOR", "KEVIN"]
 echo = Echo()
 trevor = Trevor()
+kevin = Kevin()
 
 class GP(BaseHTTPRequestHandler):
     def _set_headers(self):
@@ -46,7 +48,11 @@ class GP(BaseHTTPRequestHandler):
         elif self.path == "/chatbot/trevor":
             print("Trevor sent a message @: ", str(datetime.now()))
             req_json = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
-            self.send_json(trevor, req_json)     
+            self.send_json(trevor, req_json)  
+        elif self.path == "/chatbot/kevin":
+            print("Kevin sent a message @: ", str(datetime.now()))
+            req_json = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
+            self.send_json(kevin, req_json)        
         
 # WYRMLING DEFAULT: 127.0.1.1:8088
 
