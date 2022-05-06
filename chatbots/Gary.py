@@ -57,9 +57,13 @@ def classifier_templater(line):
 class Gary(Chatbot):
     response = "I am Gary"
 
+    def __init__(self):
+        super().__init__()
+        self.generator = pipeline('text-generation', model='Dizzykong/gpt2-quests-100', tokenizer='gpt2')
+
+
     def send_message(self):
-        generator = pipeline('text-generation', model='Dizzykong/gpt2-quests', tokenizer='gpt2')
-        result = generator("", max_length=400, num_return_sequences=1)[0]
+        result = self.generator("\n", max_length=200, num_return_sequences=1)[0]
         result = result['generated_text']
         result = result.split('\n')[1]
         result = classifier_templater(result)
