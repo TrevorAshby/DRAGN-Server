@@ -6,6 +6,7 @@ from chatbots.Gary import Gary
 from chatbots.Trevor import Trevor
 from chatbots.Kevin import Kevin
 from chatbots.Chat import Chat
+from chatbots.Classy import Classy
 from urllib.parse import parse_qs
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
@@ -16,6 +17,7 @@ gary = Gary()
 trevor = Trevor()
 kevin = Kevin()
 chat = Chat()
+classy = Classy()
 
 class GP(BaseHTTPRequestHandler):
     def _set_headers(self):
@@ -64,7 +66,11 @@ class GP(BaseHTTPRequestHandler):
         elif self.path == "/chatbot/chat":
             print("Chat sent a message @: ", str(datetime.now()))
             req_json = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
-            self.send_json(chat, req_json)         
+            self.send_json(chat, req_json)        
+        elif self.path == "/chatbot/classy":
+            print("Classy sent a message @: ", str(datetime.now()))
+            req_json = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
+            self.send_json(classy, req_json) 
         
 # WYRMLING DEFAULT: 127.0.1.1:8088
 
