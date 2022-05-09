@@ -47,6 +47,8 @@ class conversation_engine:
         self.context['ner'] = {}
         self.context['key_phrases'] = [random.choice(text.split())]
 
+        print("Updated context: ", self.context)
+
     def argmax_or_rand(self, arr):
         candidates = [0]
         max = arr[0]

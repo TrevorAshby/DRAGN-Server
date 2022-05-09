@@ -17,9 +17,12 @@ class AI21ResponseGenerator(ResponseGenerator):
 
         # input to model
         model_input = "User: " + user + "\nBot:"
+
+        print("Input to Jurrasic: ", model_input)
+
         res = requests.post(
           "https://api.ai21.com/studio/v1/j1-large/complete",
-          headers={"Authorization": "Bearer 8cMz310EOMf0vzp36zdC6TKxF3IDvE0i"},
+          headers={"Authorization": "Bearer "},
           json={
             "prompt": model_input,
             "numResults": 3,
@@ -32,6 +35,7 @@ class AI21ResponseGenerator(ResponseGenerator):
 
         # get different responses
         responses = []
+
         for i in range(3):
             text = res.json()['completions'][i]['data']['text']
 
